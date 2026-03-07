@@ -16,6 +16,24 @@ align-items:center;
 height:100vh;
 margin:0;
 color:white;
+overflow:hidden;
+}
+
+/* PARTICLES */
+body::before{
+content:"";
+position:absolute;
+width:100%;
+height:100%;
+background-image:radial-gradient(red 1px,transparent 1px);
+background-size:40px 40px;
+opacity:0.2;
+animation:move 20s linear infinite;
+}
+
+@keyframes move{
+0%{transform:translateY(0)}
+100%{transform:translateY(-200px)}
 }
 
 .box{
@@ -26,13 +44,24 @@ border-radius:20px;
 padding:25px;
 text-align:center;
 box-shadow:0 0 30px red;
+position:relative;
+z-index:2;
 }
 
+/* LOGO */
 .logo{
-width:220px;
-margin-bottom:20px;
-border-radius:10px;
-box-shadow:0 0 25px red;
+width:180px;
+height:auto;
+margin-bottom:15px;
+display:block;
+margin-left:auto;
+margin-right:auto;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{filter:drop-shadow(0 0 5px red)}
+to{filter:drop-shadow(0 0 20px red)}
 }
 
 input{
@@ -57,10 +86,11 @@ color:white;
 font-weight:bold;
 font-size:16px;
 cursor:pointer;
+transition:0.3s;
 }
 
 button:hover{
-opacity:0.9;
+transform:scale(1.05);
 }
 
 .paste{
@@ -81,14 +111,28 @@ display:none;
 margin-top:10px;
 }
 
+/* SUCCESS FLASH */
+.success{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,255,0,0.2);
+display:none;
+z-index:5;
+}
+
 </style>
 </head>
 
 <body>
 
+<div class="success" id="success"></div>
+
 <div class="box">
 
-<img src="logo.png" class="logo">
+<img src="logo.png" class="logo" loading="eager">
 
 <input id="key" placeholder="ENTER KEY">
 
@@ -111,6 +155,7 @@ async function login(){
 let userKey=document.getElementById("key").value
 let msg=document.getElementById("msg")
 let loader=document.getElementById("loader")
+let success=document.getElementById("success")
 
 msg.innerHTML=""
 loader.style.display="block"
@@ -124,7 +169,11 @@ loader.style.display="none"
 
 if(userKey===data.key){
 
+success.style.display="block"
+
+setTimeout(()=>{
 window.location.href=data.redirect
+},800)
 
 }else{
 
